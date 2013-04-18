@@ -35,10 +35,10 @@ Here's an example `config.ru`
     require 'librato-rack'
     require 'grape-librato'
 
-    LIBRATO_CONFIGURATION = Librato::Rack::Configuration.new
-    LIBRATO_CONFIGURATION.user           = ENV['LIBRATO_USER']
-    LIBRATO_CONFIGURATION.token          = ENV['LIBRATO_TOKEN']
-    LIBRATO_CONFIGURATION.source         = ENV['LIBRATO_SOURCE'] || 'localhost'
+    LIBRATO_CONFIGURATION        = Librato::Rack::Configuration.new
+    LIBRATO_CONFIGURATION.user   = ENV['LIBRATO_USER']
+    LIBRATO_CONFIGURATION.token  = ENV['LIBRATO_TOKEN']
+    LIBRATO_CONFIGURATION.source = ENV['LIBRATO_SOURCE'] || 'localhost'
 
     class API < Grape::API
       use Librato::Grape::Middleware
