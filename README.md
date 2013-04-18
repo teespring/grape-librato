@@ -3,6 +3,8 @@
 Librato tracking for [Grape][0], based on code from [this NewRelic
 gem][1], using [librato-rack][2]
 
+[![Build Status](https://travis-ci.org/seanmoon/grape-librato.png?branch=master)](http://travis-ci.org/seanmoon/grape-librato)
+
 ## Installation
 
 Add this line to your application's Gemfile:
