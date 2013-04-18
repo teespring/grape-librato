@@ -1,12 +1,13 @@
-# NewRelic::Grape
+# Libarto::Grape
 
-NewRelic instrumentation for the [Grape API DSL][0], inspired by [this blog post][1].
+Librato tracking for [Grape][0], based on code from [this NewRelic
+gem][1], using [librato-rack][2]
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'newrelic-grape'
+    gem 'grape-librato'
 
 And then execute:
 
@@ -14,51 +15,52 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install newrelic-grape
+    $ gem install grape-librato
 
-## Usage
+Include it in your Grape API like this
 
-Ensure that you have working NewRelic instrumentation. Add the `newrelic-grape` gem. That's it.
+    class TestAPI < Grape::API
+      use Librato::Grape::Middleware
 
-## Disabling Instrumentation
+      get 'hello' do
+        "Hello World"
+      end
+    end
 
-Set `disable_grape` in `newrelic.yml` or `ENV['DISABLE_NEW_RELIC_GRAPE']` to disable instrumentation.
+*Make sure you are also using the librato-rack middleware*
 
-## Testing
+Here's an example `config.ru`
 
-This gem naturally works in NewRelic developer mode. For more information see the [NewRelic Developer Documentation][2].
+    require 'grape'
+    require 'librato-rack'
+    require 'grape-librato'
 
-To ensure instrumentation in tests, check that `perform_action_with_newrelic_trace` is invoked on an instance of `NewRelic::Agent::Instrumentation::Grape` when calling your API.
+    LIBRATO_CONFIGURATION = Librato::Rack::Configuration.new
+    LIBRATO_CONFIGURATION.user           = ENV['LIBRATO_USER']
+    LIBRATO_CONFIGURATION.token          = ENV['LIBRATO_TOKEN']
+    LIBRATO_CONFIGURATION.source         = ENV['LIBRATO_SOURCE'] || 'localhost'
 
-### RSpec
+    class API < Grape::API
+      use Librato::Grape::Middleware
+      get 'hello' do
+        "Hello World"
+      end
+    end
 
-``` ruby
-describe NewRelic::Agent::Instrumentation::Grape do
-  it "traces" do
-    NewRelic::Agent::Instrumentation::Grape
-      .any_instance
-      .should_receive(:perform_action_with_newrelic_trace)
-      .and_yield
-    get "/ping"
-    response.status.should == 200
-  end
-end
-```
+    use Librato::Rack, config: LIBRATO_CONFIGURATION
+    run API
 
-## Demos
-
-* [Grape on Rack w/ NewRelic Instrumentation Enabled][3]
+See how to set up the `Librato::Rack` object in the [librato-rack][2]
+documentation.
 
 ## Contributing
 
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Update `CHANGELOG.md` describing your changes
-4. Commit your changes (`git commit -am 'Add some feature'`)
-5. Push to the branch (`git push origin my-new-feature`)
-6. Create new Pull Request
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Make a pull request
 
 [0]: https://github.com/intridea/grape
-[1]: http://artsy.github.com/blog/2012/11/29/measuring-performance-in-grape-apis-with-new-relic
-[2]: https://newrelic.com/docs/ruby/developer-mode
-[3]: https://github.com/dblock/grape-on-rack
+[1]: https://github.com/flyerhzm/newrelic-grape
+[2]: https://github.com/librato/librato-rack
