@@ -11,8 +11,9 @@ describe Librato::Grape::Middleware do
 
   def app; TestAPI; end
 
-  it "should send a timing event for each request" do
-    Librato.should_receive(:timing).with('GET.hello.:name').and_yield
+  it "should send an increment and  timing event for each request" do
+    Librato.should_receive(:increment).with('grape.GET.hello.:name')
+    Librato.should_receive(:timing).with('grape.GET.hello.:name.time').and_yield
     get "/hello/sean"
     last_response.status.should == 200
     last_response.body.should == "hello sean"
