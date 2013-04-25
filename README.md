@@ -1,4 +1,4 @@
-# Libarto::Grape
+# Librato::Grape
 
 Librato tracking for [Grape][0], based on code from [this NewRelic
 gem][1], using [librato-rack][2]
