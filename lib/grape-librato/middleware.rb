@@ -10,7 +10,14 @@ module Librato
 
       def call(env)
         req = ::Rack::Request.new(env)
-        request_path = env['api.endpoint'].routes.first.route_path[1..-1].gsub("/", ".").sub(/\(\.:format\)\z/, "") 
+        request_path =
+          env['api.endpoint'].
+          routes.
+          first.
+          path[1..-1].
+          gsub("/", ".").
+          sub(/\(\.:format\)\z/, "")
+
         metric_name  = "grape.#{req.request_method}.#{request_path}"
         Librato.increment metric_name
         Librato.timing "#{metric_name}.time" do
